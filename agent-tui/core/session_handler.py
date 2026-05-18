@@ -48,7 +48,7 @@ class SessionHandler:
         """
 
         url = f"https://{self.ip}/redfish/v1/"
-        timeout = 15 * 60
+        timeout = 30 * 60
         start_time = time.time()
 
         while time.time() - start_time < timeout:
@@ -68,7 +68,8 @@ class SessionHandler:
                     self.session.expect("Password:", timeout=10)
                     self.session.sendline(self.ipmi_password)
                     self.logger.info("SOL session activated successfully...")
-                    self.add_kernel_args()
+                    self.session.expect("GRUB", timeout=timeout)
+                    self.logger.info("Found GRUB menu...")
                     self.session.expect("Rendezvous IP", timeout=timeout)
                     self.session.logfile = open(self.logger.handlers[0].baseFilename, "ab")
                     return self.session
@@ -77,30 +78,6 @@ class SessionHandler:
                 time.sleep(30)
         self.logger.error("Timeout: Failed to activate SOL session after waiting 15 minutes.")
         sys.exit(1)
-
-    def add_kernel_args(self):
-        """
-        Workaround to add kwargs for serial console until this bug OCPBUGS-76501 is fixed
-        """
-        self.session.expect("GRUB version", timeout=900)
-        self.logger.info("Found GRUB menu...")
-        time.sleep(2)
-        self.session.send("e")
-        self.logger.info("Typed 'e' to edit...")
-        time.sleep(1)
-        self.session.expect("linux", timeout=10)
-        self.logger.info("Successfully entered edit mode (found 'linux' line).")
-        for _ in range(2):
-            self.session.send('\x1b[B')
-            self.logger.info("Moving down...")
-            time.sleep(1)
-        self.session.sendcontrol('e')
-        self.logger.info("Moved to end of line.")
-        self.session.send(" console=ttyS0")
-        time.sleep(1)
-        self.logger.info("Appended serial console argument.")
-        self.session.sendcontrol('x')
-        self.logger.info("Sent Ctrl+X to boot.")
 
     def sol_deactivate(self):
         """
