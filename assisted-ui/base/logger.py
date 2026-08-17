@@ -8,7 +8,7 @@ def get_logger(name="assisted_ui"):
     logger.setLevel(logging.INFO)
 
     if not logger.hasHandlers():
-        fh = logging.FileHandler("/tmp/assisted_ui.log")
+        fh = logging.StreamHandler()
         fh.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
         logger.addHandler(fh)
 

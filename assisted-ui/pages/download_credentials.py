@@ -6,7 +6,7 @@ from playwright.sync_api import Page
 
 from base.logger import log_page_activity
 from base.logger import get_logger
-from pages.custom_manifests import CustomManifests
+from pages.review import Review
 
 
 @log_page_activity
@@ -34,4 +34,4 @@ class DownloadCredentials:
         time.sleep(5)
         self.download_credentials.click()
         expect(self.download_confirmation).not_to_be_visible(timeout=90000)
-        return CustomManifests(self.page)
+        return Review(self.page)

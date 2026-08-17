@@ -10,13 +10,8 @@ from pages.host_discovery import HostDiscovery
 class VirtualizationBundle:
     def __init__(self, page: Page) -> None:
         self.page = page
-        self.navigate_operators = page.get_by_role("button", name="Operators")
         self.virtualization = page.get_by_label("", exact=True)
         self.next_button = page.get_by_role("button", name="Next")
-
-    def click_operators_navigation(self):
-        self.navigate_operators.click()
-        return self
 
     def click_virtualization_checkbox(self):
         time.sleep(2)

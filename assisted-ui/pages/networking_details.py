@@ -1,7 +1,7 @@
 from playwright.sync_api import Page
 
 from base.logger import log_page_activity
-from pages.download_credentials import DownloadCredentials
+from pages.custom_manifests import CustomManifests
 
 
 @log_page_activity
@@ -27,4 +27,4 @@ class NetworkingDetails:
 
     def click_next_button(self):
         self.next_button.click(timeout=90000)
-        return DownloadCredentials(self.page)
+        return CustomManifests(self.page)

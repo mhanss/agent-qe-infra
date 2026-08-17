@@ -1,6 +1,6 @@
 from base.logger import get_logger
 from base.logger import log_page_activity
-from pages.review import Review
+from pages.download_credentials import DownloadCredentials
 from playwright.sync_api import Page, TimeoutError
 
 
@@ -19,4 +19,4 @@ class CustomManifests:
             self.next_button.click()
         except TimeoutError:
             self.logger.info("No Custom manifests page (OCP <4.22), already on review page")
-        return Review(self.page)
+        return DownloadCredentials(self.page)
