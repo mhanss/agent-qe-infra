@@ -47,7 +47,6 @@ class AgentUiDriver(BrowserInstance):
                                    .click_next_button())
 
             host_discovery_page = (virtualization_page
-                                   .click_operators_navigation()
                                    .click_virtualization_checkbox()
                                    .click_next_button())
 
@@ -58,7 +57,7 @@ class AgentUiDriver(BrowserInstance):
             networking_details_page = (storage_page
                                        .click_next_button())
 
-            download_credentials_page = (networking_details_page
+            custom_manifests = (networking_details_page
                                          .select_user_managed_networking()
                                          .click_next_button()
                                          if self.umn else
@@ -67,12 +66,12 @@ class AgentUiDriver(BrowserInstance):
                                          .type_ingress_ip(self.ingress_ip)
                                          .click_next_button())
 
-            custom_manifests = (download_credentials_page
+            download_credentials_page = (custom_manifests
+                                         .handle_custom_manifests())
+
+            review_page = (download_credentials_page
                                 .check_confirmation()
                                 .click_download_credentials())
-
-            review_page = (custom_manifests
-                           .handle_custom_manifests())
 
             installation_progress = review_page.click_install_cluster()
 
